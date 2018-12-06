@@ -30,15 +30,12 @@ public class LoginActivity extends AppCompatActivity {
         List<AuthUI.IdpConfig> providers = Arrays.asList(
                 new AuthUI.IdpConfig.PhoneBuilder().build());
 
-        // comment line below to proceed with login
-        redirectToMainActivity();
-
-//        startActivityForResult(
-//                AuthUI.getInstance()
-//                        .createSignInIntentBuilder()
-//                        .setAvailableProviders(providers)
-//                        .build(),
-//                RC_SIGN_IN);
+        startActivityForResult(
+                AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setAvailableProviders(providers)
+                        .build(),
+                RC_SIGN_IN);
     }
 
     public void redirectToMainActivity() {

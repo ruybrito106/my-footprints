@@ -2,7 +2,7 @@ package br.com.ufpe.cin.myfootprints;
 
 public class LocationUpdate {
 
-    private static final double DISTANCE_THRESHOLD = 1000.0;
+    private static final double DISTANCE_THRESHOLD = 150.0;
     private static final int EARTH_RADIUS = 6371;
 
     public LocationUpdate(double lat, double lng, int timestampSeconds) {
