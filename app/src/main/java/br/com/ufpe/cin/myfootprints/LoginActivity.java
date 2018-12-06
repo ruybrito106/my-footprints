@@ -20,7 +20,6 @@ import java.util.List;
 public class LoginActivity extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 123;
-    public static final String FIREBASE_USER = "br.com.ufpe.cin.myfootprints.FIREBASE_USER";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,18 +33,19 @@ public class LoginActivity extends AppCompatActivity {
         List<AuthUI.IdpConfig> providers = Arrays.asList(
                 new AuthUI.IdpConfig.PhoneBuilder().build());
 
+        // comment line below to proceed with login
+        redirectToMainActivity();
 
-        startActivityForResult(
-                AuthUI.getInstance()
-                        .createSignInIntentBuilder()
-                        .setAvailableProviders(providers)
-                        .build(),
-                RC_SIGN_IN);
+//        startActivityForResult(
+//                AuthUI.getInstance()
+//                        .createSignInIntentBuilder()
+//                        .setAvailableProviders(providers)
+//                        .build(),
+//                RC_SIGN_IN);
     }
 
-    public void redirectToMainActivity(FirebaseUser user) {
+    public void redirectToMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra(FIREBASE_USER, user);
         startActivity(intent);
     }
 
@@ -57,8 +57,7 @@ public class LoginActivity extends AppCompatActivity {
             IdpResponse response = IdpResponse.fromResultIntent(data);
 
             if (resultCode == RESULT_OK) {
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                redirectToMainActivity(user);
+                redirectToMainActivity();
             } else {
                 // Sign in failed. If response is null the user canceled the
                 // sign-in flow using the back button. Otherwise check
