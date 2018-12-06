@@ -37,13 +37,13 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:fontFamily="@font/baloo"
-        android:text="My Footprints"
+        android:text="@string/app_name"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         android:textColor="#FFFFFF"
         android:textSize="50sp"
         android:typeface="sans"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintHorizontal_bias="0.637"
         app:layout_constraintStart_toStartOf="parent" />
 </android.support.constraint.ConstraintLayout>
