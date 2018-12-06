@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
+import android.text.method.ScrollingMovementMethod;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -120,28 +121,25 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Date current = new Date();
-        DateHelper helper = new DateHelper();
+        final TextView pathText = (TextView) findViewById(R.id.routeText);
+        pathText.setMovementMethod(new ScrollingMovementMethod());
 
-        Date beginDate = helper.atStartOfDay(current);
-        Date endDate = helper.atEndOfDay(current);
-
-        List<LocationUpdate> path = getLocationUpdatesByTimeRange(beginDate, endDate);
-        String pathStr = "";
-
-        for (int i = 0; i < path.size(); i++) {
-            LocationUpdate x = path.get(i);
-            pathStr += Double.toString(x.getLat()) + " " + Double.toString(x.getLng()) + " -> " + Long.toString(x.getTimestampSeconds());
-        }
-
-        final EditText pathText = (EditText) findViewById(R.id.routeText);
         Button pathButton = (Button) findViewById(R.id.findRoute);
 
-        final String finalPathStr = pathStr;
         pathButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pathText.setText(finalPathStr);
+                Date current = new Date();
+                DateHelper helper = new DateHelper();
+
+                List<LocationUpdate> path = getLocationUpdatesByTimeRange(helper.atStartOfDay(current), helper.atEndOfDay(current));
+                String pathStr = "";
+
+                for (int i = 0; i < path.size(); i++) {
+                    pathStr += path.get(i).toString() + " ";
+                }
+
+                pathText.setText(pathStr);
             }
         });
 

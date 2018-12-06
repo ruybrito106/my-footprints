@@ -11,8 +11,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import br.com.ufpe.cin.myfootprints.LocationUpdate;
-
 public class LocationUpdateDAO extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "locations";
@@ -63,11 +61,6 @@ public class LocationUpdateDAO extends SQLiteOpenHelper {
 
     public void insertLocationUpdate(LocationUpdate update) {
 
-        LocationUpdate prevLocation = getLastLocationUpdate();
-        if (prevLocation != null && !prevLocation.isNearby(update)) {
-            return;
-        }
-
         ContentValues values = new ContentValues();
         values.put(LOCATION_UPDATE_LAT, update.getLat());
         values.put(LOCATION_UPDATE_LNG, update.getLng());
@@ -88,26 +81,24 @@ public class LocationUpdateDAO extends SQLiteOpenHelper {
         int startTimestampMillis = (int)(startDate.getTime()/1000);
         int endTimestampMillis = (int)(endDate.getTime()/1000);
 
-        String modelQuery = "SELECT * FROM %s WHERE %s.%s BETWEEN %d AND %d";
-        String query = String.format(modelQuery, DATABASE_TABLE, DATABASE_TABLE, LOCATION_UPDATE_TIMESTAMP, startTimestampMillis, endTimestampMillis);
+        String modelQuery = "SELECT * FROM %s WHERE %s.%s BETWEEN %d AND %d ORDER BY %s.%s";
+        String query = String.format(
+                modelQuery,
+                DATABASE_TABLE,
+                DATABASE_TABLE,
+                LOCATION_UPDATE_TIMESTAMP,
+                startTimestampMillis,
+                endTimestampMillis,
+                DATABASE_TABLE,
+                LOCATION_UPDATE_TIMESTAMP
+        );
 
-        return getLocationUpdates(query);
-    }
-
-    public LocationUpdate getLastLocationUpdate() {
-        String modelQuery = "SELECT * FROM %s ORDER BY %s.%s DESC LIMIT 1";
-        String query = String.format(modelQuery, DATABASE_TABLE, DATABASE_TABLE, LOCATION_UPDATE_TIMESTAMP);
-
-        List<LocationUpdate> result = getLocationUpdates(query);
-        if (result == null || result.size() == 0) {
-            return null;
-        }
-
-        return result.get(0);
+        List<LocationUpdate> rawList =  getLocationUpdates(query);
+        return LocationUpdate.filterRealVisits(rawList);
     }
 
     private List<LocationUpdate> getLocationUpdates(String query) {
-        List<LocationUpdate> result = new ArrayList<LocationUpdate>();
+        List<LocationUpdate> result = new ArrayList<>();
         Cursor cursor = getReadableDatabase().rawQuery(query, null);
 
         try {
