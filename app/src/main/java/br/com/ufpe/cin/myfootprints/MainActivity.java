@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements OnDateSetListener
         pathButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateMap();
+                updateMap(false);
 
             }
         });
@@ -196,17 +196,17 @@ public class MainActivity extends AppCompatActivity implements OnDateSetListener
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        updateMap();
+        updateMap(true);
     }
 
-    void updateMap(){
+    void updateMap(boolean firstTime){
         mMap.clear();
         List<LocationUpdate> path = getLocationUpdatesByTimeRange(startDate, endDate);
         for(LocationUpdate location : path){
             LatLng latlng = new LatLng(location.getLat(), location.getLng());
             String label = dateFormat.format(new Date((long)location.getTimestampSeconds()*1000));
             mMap.addMarker(new MarkerOptions().position(latlng).title(label));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(latlng));
+            if(firstTime) mMap.moveCamera(CameraUpdateFactory.newLatLng(latlng));
         }
     }
 }
