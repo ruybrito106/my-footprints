@@ -27,14 +27,20 @@ import java.util.List;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.Manifest.permission.READ_CONTACTS;
+import static android.Manifest.permission.SEND_SMS;
 
 
 public class MainActivity extends AppCompatActivity implements OnDateSetListener, OnMapReadyCallback {
 
     private static final int PERMISSIONS_REQUEST_CODE = 200;
-    private static final String[] PERMISSIONS = {
+    private static final String[] LOCATION_PERMISSIONS = {
             ACCESS_FINE_LOCATION,
             ACCESS_COARSE_LOCATION,
+    };
+    private static final String[] SMS_PERMISSIONS = {
+            READ_CONTACTS,
+            SEND_SMS,
     };
 
     private String phoneNumber;
@@ -45,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements OnDateSetListener
     private DateFormat dateFormat;
     private GoogleMap mMap;
 
-
+    private boolean canSendSMS;
     private LocationUpdateDAO dbInstance;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -68,11 +74,29 @@ public class MainActivity extends AppCompatActivity implements OnDateSetListener
                 this.checkSelfPermission(ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
+    private boolean hasGrantedPermission(String permission, String[] permissions) {
+        for (String p : permissions) {
+            if (p == permission) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean canReadContactsAndSendSMS() {
+        return this.checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED &&
+                this.checkSelfPermission(SEND_SMS) == PackageManager.PERMISSION_GRANTED;
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == PERMISSIONS_REQUEST_CODE) {
-            Intent locationUpdateServiceIntent = new Intent(this, br.com.ufpe.cin.myfootprints.LocationUpdateService.class);
-            startService(locationUpdateServiceIntent);
+            if (hasGrantedPermission(ACCESS_FINE_LOCATION, permissions) || hasGrantedPermission(ACCESS_COARSE_LOCATION, permissions)) {
+                Intent locationUpdateServiceIntent = new Intent(this, br.com.ufpe.cin.myfootprints.LocationUpdateService.class);
+                startService(locationUpdateServiceIntent);
+            } else if (hasGrantedPermission(SEND_SMS, permissions) || hasGrantedPermission(READ_CONTACTS, permissions)) {
+                this.canSendSMS = true;
+            }
         }
     }
 
@@ -153,10 +177,16 @@ public class MainActivity extends AppCompatActivity implements OnDateSetListener
         mapFragment.getMapAsync(this);
 
         if (!canAccessLocation()) {
-            this.requestPermissions(PERMISSIONS, PERMISSIONS_REQUEST_CODE);
+            this.requestPermissions(LOCATION_PERMISSIONS, PERMISSIONS_REQUEST_CODE);
         } else {
             Intent locationUpdateServiceIntent = new Intent(this, br.com.ufpe.cin.myfootprints.LocationUpdateService.class);
             startService(locationUpdateServiceIntent);
+        }
+
+        if (!canReadContactsAndSendSMS()) {
+            this.requestPermissions(SMS_PERMISSIONS, PERMISSIONS_REQUEST_CODE);
+        } else {
+            canSendSMS = true;
         }
 
         dbInstance = LocationUpdateDAO.getInstance(this);
