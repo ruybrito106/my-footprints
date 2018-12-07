@@ -2,6 +2,9 @@ package br.com.ufpe.cin.myfootprints;
 
 import android.util.Log;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,10 +50,10 @@ public class LocationUpdate {
 
     public String toString() {
         return String.format(
-                "[%.2f, %.2f, %d]",
+                "[%.6f, %.6f, %d]",
                 this.getLat(),
                 this.getLng(),
-                this.getTimestampSeconds()/1000
+                this.getTimestampSeconds()
         );
     }
 
@@ -92,6 +95,15 @@ public class LocationUpdate {
             }
         }
         return filtered;
+    }
+
+    public static String locationUpdatesToSMSText(List<LocationUpdate> as) {
+        String userMobileNumber = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
+        String text = userMobileNumber + " shared: \n";
+        for(LocationUpdate a : as) {
+            text += a.toString() + "\n";
+        }
+        return text;
     }
 
 }

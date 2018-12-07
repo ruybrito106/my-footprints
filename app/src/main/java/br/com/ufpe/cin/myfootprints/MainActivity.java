@@ -3,6 +3,7 @@ package br.com.ufpe.cin.myfootprints;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -42,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements OnDateSetListener
             READ_CONTACTS,
             SEND_SMS,
     };
+
+    private static final int SELECT_CONTACT_REQUEST_CODE = 201;
 
     private String phoneNumber;
     private EditText startDateText;
@@ -100,6 +103,20 @@ public class MainActivity extends AppCompatActivity implements OnDateSetListener
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == SELECT_CONTACT_REQUEST_CODE && resultCode == RESULT_OK) {
+            ContactPicker picker = new ContactPicker();
+            picker.setContactMobileNumber(this, data);
+
+            List<LocationUpdate> path = getLocationUpdatesByTimeRange(startDate, endDate);
+
+            String contactNumber = picker.getContactNumber();
+            SMSHelper helper = new SMSHelper(contactNumber, path);
+            helper.sendSMS();
+        }
+    }
+
     private List<LocationUpdate> getLocationUpdatesByTimeRange(Date beginDate, Date endDate) {
         return dbInstance.getLocationUpdatesByDateRange(beginDate, endDate);
     }
@@ -132,12 +149,22 @@ public class MainActivity extends AppCompatActivity implements OnDateSetListener
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         Button pathButton = (Button) findViewById(R.id.findRoute);
+        Button shareButton = (Button) findViewById(R.id.shareLocation);
 
         pathButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 updateMap(false);
 
+            }
+        });
+
+        shareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent actionPickIntent = new Intent(Intent.ACTION_PICK);
+                actionPickIntent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
+                startActivityForResult(actionPickIntent, SELECT_CONTACT_REQUEST_CODE);
             }
         });
 
