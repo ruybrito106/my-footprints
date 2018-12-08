@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -113,7 +114,18 @@ public class MainActivity extends AppCompatActivity implements OnDateSetListener
 
             String contactNumber = picker.getContactNumber();
             SMSHelper helper = new SMSHelper(contactNumber, path);
-            helper.sendSMS();
+
+            switch (helper.sendSMS()) {
+                case SMSHelper.ERROR_NOT_ENOUGH_VISITS:
+                    Toast.makeText(this, "Not enough visits", Toast.LENGTH_SHORT).show();
+                    break;
+                case SMSHelper.ERROR_TOO_MANY_VISITS:
+                    Toast.makeText(this, "SMS length too long", Toast.LENGTH_SHORT).show();
+                    break;
+                case SMSHelper.SUCCESS:
+                    Toast.makeText(this, "Location shared", Toast.LENGTH_SHORT).show();
+                    break;
+            }
         }
     }
 
