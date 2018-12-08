@@ -1,6 +1,9 @@
 package br.com.ufpe.cin.myfootprints;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -30,7 +33,9 @@ import java.util.List;
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.READ_CONTACTS;
+import static android.Manifest.permission.READ_SMS;
 import static android.Manifest.permission.SEND_SMS;
+import static android.Manifest.permission.RECEIVE_SMS;
 
 
 public class MainActivity extends AppCompatActivity implements OnDateSetListener, OnMapReadyCallback {
@@ -43,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements OnDateSetListener
     private static final String[] SMS_PERMISSIONS = {
             READ_CONTACTS,
             SEND_SMS,
+            RECEIVE_SMS,
     };
 
     private static final int SELECT_CONTACT_REQUEST_CODE = 201;
@@ -57,6 +63,12 @@ public class MainActivity extends AppCompatActivity implements OnDateSetListener
 
     private boolean canSendSMS;
     private LocationUpdateDAO dbInstance;
+
+    private void registerBroadcastReceiver() {
+        IntentFilter intentFilter = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
+        BroadcastReceiver receiver = new SMSListener();
+        registerReceiver(receiver, intentFilter);
+    }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
         = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -89,7 +101,8 @@ public class MainActivity extends AppCompatActivity implements OnDateSetListener
 
     private boolean canReadContactsAndSendSMS() {
         return this.checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED &&
-                this.checkSelfPermission(SEND_SMS) == PackageManager.PERMISSION_GRANTED;
+                this.checkSelfPermission(SEND_SMS) == PackageManager.PERMISSION_GRANTED &&
+                this.checkSelfPermission(RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED;
     }
 
     @Override
@@ -98,8 +111,9 @@ public class MainActivity extends AppCompatActivity implements OnDateSetListener
             if (hasGrantedPermission(ACCESS_FINE_LOCATION, permissions) || hasGrantedPermission(ACCESS_COARSE_LOCATION, permissions)) {
                 Intent locationUpdateServiceIntent = new Intent(this, br.com.ufpe.cin.myfootprints.LocationUpdateService.class);
                 startService(locationUpdateServiceIntent);
-            } else if (hasGrantedPermission(SEND_SMS, permissions) || hasGrantedPermission(READ_CONTACTS, permissions)) {
+            } else if (hasGrantedPermission(SEND_SMS, permissions) || hasGrantedPermission(READ_CONTACTS, permissions) || hasGrantedPermission(READ_SMS, permissions)) {
                 this.canSendSMS = true;
+                registerBroadcastReceiver();
             }
         }
     }
@@ -156,7 +170,6 @@ public class MainActivity extends AppCompatActivity implements OnDateSetListener
         endDateText.setText(dateFormat.format(Calendar.getInstance().getTime()));
         endDateText.setInputType(InputType.TYPE_NULL);
 
-
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
@@ -167,13 +180,19 @@ public class MainActivity extends AppCompatActivity implements OnDateSetListener
             @Override
             public void onClick(View v) {
                 updateMap(false);
-
             }
         });
 
+        final Context ctx = this;
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if (!canSendSMS) {
+                    Toast.makeText(ctx, "Permission to send SMS revoked.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 Intent actionPickIntent = new Intent(Intent.ACTION_PICK);
                 actionPickIntent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
                 startActivityForResult(actionPickIntent, SELECT_CONTACT_REQUEST_CODE);
@@ -209,7 +228,6 @@ public class MainActivity extends AppCompatActivity implements OnDateSetListener
         startDate = helper.atStartOfDay(current);
         endDate = helper.atEndOfDay(current);
 
-
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -226,6 +244,7 @@ public class MainActivity extends AppCompatActivity implements OnDateSetListener
             this.requestPermissions(SMS_PERMISSIONS, PERMISSIONS_REQUEST_CODE);
         } else {
             canSendSMS = true;
+            registerBroadcastReceiver();
         }
 
         dbInstance = LocationUpdateDAO.getInstance(this);
