@@ -5,11 +5,13 @@ import java.util.List;
 public class FriendSharedLocation {
 
     private String friendContactNumber;
+    private String date;
     private List<LocationUpdate> path;
 
-    public FriendSharedLocation(String friendContactNumber, List<LocationUpdate> path) {
+    public FriendSharedLocation(String friendContactNumber, String date, List<LocationUpdate> path) {
         this.friendContactNumber = friendContactNumber;
         this.path = path;
+        this.date = date;
     }
 
     public String getFriendContactNumber() {
@@ -26,6 +28,14 @@ public class FriendSharedLocation {
 
     public void setPath(List<LocationUpdate> path) {
         this.path = path;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
 }

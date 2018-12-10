@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.view.MenuItem;
@@ -40,18 +41,14 @@ import static android.Manifest.permission.RECEIVE_SMS;
 
 public class MainActivity extends AppCompatActivity implements OnDateSetListener, OnMapReadyCallback {
 
-    private static final int PERMISSIONS_REQUEST_CODE = 200;
-    private static final String[] LOCATION_PERMISSIONS = {
-            ACCESS_FINE_LOCATION,
-            ACCESS_COARSE_LOCATION,
-    };
-    private static final String[] SMS_PERMISSIONS = {
-            READ_CONTACTS,
-            SEND_SMS,
-            RECEIVE_SMS,
-    };
+    private static final int HOME_MODE = 0;
+    private static final int FRIENDS_MODE = 1;
 
+    private static final int PERMISSIONS_REQUEST_CODE = 200;
     private static final int SELECT_CONTACT_REQUEST_CODE = 201;
+
+    private static final String[] LOCATION_PERMISSIONS = { ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION };
+    private static final String[] SMS_PERMISSIONS = { READ_CONTACTS, SEND_SMS, RECEIVE_SMS };
 
     private String phoneNumber;
     private EditText startDateText;
@@ -62,7 +59,50 @@ public class MainActivity extends AppCompatActivity implements OnDateSetListener
     private GoogleMap mMap;
 
     private boolean canSendSMS;
+    private int currentMode;
+
     private LocationUpdateDAO dbInstance;
+
+    private void hideHomeElements() {
+        startDateText.setVisibility(View.INVISIBLE);
+        endDateText.setVisibility(View.INVISIBLE);
+
+        findViewById(R.id.myRectangleView).setVisibility(View.INVISIBLE);
+        getSupportFragmentManager().findFragmentById(R.id.map).getView().setVisibility(View.INVISIBLE);
+
+        findViewById(R.id.findRoute).setVisibility(View.INVISIBLE);
+        findViewById(R.id.shareLocation).setVisibility(View.INVISIBLE);
+    }
+
+    private void showHomeElements() {
+        startDateText.setVisibility(View.VISIBLE);
+        endDateText.setVisibility(View.VISIBLE);
+
+        findViewById(R.id.myRectangleView).setVisibility(View.VISIBLE);
+        getSupportFragmentManager().findFragmentById(R.id.map).getView().setVisibility(View.VISIBLE);
+
+        findViewById(R.id.findRoute).setVisibility(View.VISIBLE);
+        findViewById(R.id.shareLocation).setVisibility(View.VISIBLE);
+    }
+
+    private void inflateFriendsFragment(int state) {
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+
+        switch (state) {
+            case HOME_MODE:
+                FriendsFragment fragment = (FriendsFragment) getSupportFragmentManager().findFragmentById(R.id.friendsFragment);
+                ft.remove(fragment).commit();
+                showHomeElements();
+                break;
+            case FRIENDS_MODE:
+                FriendsFragment f = new FriendsFragment();
+                ft.add(R.id.friendsFragment, f).commit();
+                hideHomeElements();
+                break;
+        }
+
+    }
 
     private void registerBroadcastReceiver() {
         IntentFilter intentFilter = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
@@ -75,10 +115,13 @@ public class MainActivity extends AppCompatActivity implements OnDateSetListener
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            currentMode = (currentMode + 1) % 2;
             switch (item.getItemId()) {
                 case R.id.navigation_home:
+                    inflateFriendsFragment(currentMode);
                     return true;
                 case R.id.navigation_dashboard:
+                    inflateFriendsFragment(currentMode);
                     return true;
             }
             return false;
@@ -124,10 +167,17 @@ public class MainActivity extends AppCompatActivity implements OnDateSetListener
             ContactPicker picker = new ContactPicker();
             picker.setContactMobileNumber(this, data);
 
+            final long MILLISECONDS_IN_A_DAY = 24 * 3600 * 1000;
+            if (endDate.getTime() - startDate.getTime() > MILLISECONDS_IN_A_DAY) {
+                Toast.makeText(this, "Unable to share data for multiple days!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             List<LocationUpdate> path = getLocationUpdatesByTimeRange(startDate, endDate);
 
+            String date = dateFormat.format(startDate);
             String contactNumber = picker.getContactNumber();
-            SMSHelper helper = new SMSHelper(contactNumber, path);
+            SMSHelper helper = new SMSHelper(contactNumber, date, path);
 
             switch (helper.sendSMS()) {
                 case SMSHelper.ERROR_NOT_ENOUGH_VISITS:
@@ -219,6 +269,10 @@ public class MainActivity extends AppCompatActivity implements OnDateSetListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        currentMode = HOME_MODE;
+
+        dbInstance = LocationUpdateDAO.getInstance(this);
+
         dateFormat = android.text.format.DateFormat.getDateFormat(getApplicationContext());
         phoneNumber = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
 
@@ -247,7 +301,6 @@ public class MainActivity extends AppCompatActivity implements OnDateSetListener
             registerBroadcastReceiver();
         }
 
-        dbInstance = LocationUpdateDAO.getInstance(this);
         populateView();
     }
 
