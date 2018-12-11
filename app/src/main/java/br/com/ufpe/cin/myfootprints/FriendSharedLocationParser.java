@@ -30,27 +30,32 @@ public class FriendSharedLocationParser {
 
     public static FriendSharedLocation locationUpdatesFromSMSText(String smsText) {
 
-        String friendContactNumber;
-        String sharedDate;
-        List<LocationUpdate> friendPath = new ArrayList<>();
+        try{
+            String friendContactNumber;
+            String sharedDate;
+            List<LocationUpdate> friendPath = new ArrayList<>();
 
-        String[] tmp = smsText.split(":");
-        friendContactNumber = tmp[0];
-        sharedDate = tmp[1];
+            String[] tmp = smsText.split(":");
+            friendContactNumber = tmp[0];
+            sharedDate = tmp[1];
 
-        String[] tmp2 = tmp[2].split(",");
-        for (String str : tmp2) {
-            if (str.length() > 0) {
-                LocationUpdate visit = LocationUpdate.fromGeohash(str.substring(0, 9));
-                visit.setTimestampSeconds(Integer.parseInt(str.substring(9)));
-                if (friendPath.size() > 0) {
-                    visit.setTimestampSeconds(visit.getTimestampSeconds() + friendPath.get(friendPath.size()-1).getTimestampSeconds());
+            String[] tmp2 = tmp[2].split(",");
+            for (String str : tmp2) {
+                if (str.length() > 0) {
+                    LocationUpdate visit = LocationUpdate.fromGeohash(str.substring(0, 9));
+                    visit.setTimestampSeconds(Integer.parseInt(str.substring(9)));
+                    if (friendPath.size() > 0) {
+                        visit.setTimestampSeconds(visit.getTimestampSeconds() + friendPath.get(friendPath.size()-1).getTimestampSeconds());
+                    }
+                    friendPath.add(visit);
                 }
-                friendPath.add(visit);
             }
+
+            return new FriendSharedLocation(friendContactNumber, sharedDate, friendPath);
+        } catch(Exception err) {
+            return new FriendSharedLocation("", "", new ArrayList<LocationUpdate>());
         }
 
-        return new FriendSharedLocation(friendContactNumber, sharedDate, friendPath);
 
     }
 
