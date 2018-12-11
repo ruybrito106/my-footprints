@@ -2,6 +2,8 @@ package br.com.ufpe.cin.myfootprints;
 
 import android.telephony.SmsManager;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.Date;
 import java.util.List;
 
@@ -23,7 +25,8 @@ public class SMSHelper {
 
     public int sendSMS() {
 
-        String smsText = FriendSharedLocationParser.locationUpdatesToSMSText(this.path, this.date);
+        String userMobileNumber = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
+        String smsText = FriendSharedLocationParser.locationUpdatesToSMSText(this.path, this.date, userMobileNumber);
 
         switch (smsText) {
             case FriendSharedLocationParser.STATUS_NOT_ENOUGH_POINTS:
