@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="pref_location_accuracy_entries">
+        <item>Low</item>
+        <item>Medium</item>
+        <item>High</item>
+    </string-array>
+    <string-array name="pref_location_accuracy_values">
+        <item>20m</item>
+        <item>30m</item>
+        <item>60m</item>
+    </string-array>
+</resources>

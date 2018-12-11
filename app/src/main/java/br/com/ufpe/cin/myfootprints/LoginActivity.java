@@ -92,8 +92,8 @@ public class LoginActivity extends AppCompatActivity {
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
                         .setAvailableProviders(providers)
-//                        .setLogo(R.drawable.my_great_logo)      // Set logo drawable
-//                        .setTheme(R.style.MySuperAppTheme)      // Set theme
+                        .setLogo(R.drawable.logo)
+                        .setTheme(R.style.AppTheme)
                         .build(),
                 RC_SIGN_IN);
     }

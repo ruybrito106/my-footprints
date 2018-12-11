@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="Location">
+        <ListPreference
+            android:defaultValue="1"
+            android:dialogTitle="@string/title_change_location_accuracy"
+            android:entries="@array/pref_location_accuracy_entries"
+            android:entryValues="@array/pref_location_accuracy_values"
+            android:key="@string/key_change_location_accuracy"
+            android:summary="@string/summary_change_location_accuracy"
+            android:title="@string/title_change_location_accuracy" />
+    </PreferenceCategory>
+</PreferenceScreen>
