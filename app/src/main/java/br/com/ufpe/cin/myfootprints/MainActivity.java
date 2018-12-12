@@ -70,6 +70,8 @@ public class MainActivity extends AppCompatActivity implements OnDateSetListener
         endDateText.setVisibility(View.INVISIBLE);
 
         findViewById(R.id.myRectangleView).setVisibility(View.INVISIBLE);
+        findViewById(R.id.editTextSeparator).setVisibility(View.INVISIBLE);
+
         getSupportFragmentManager().findFragmentById(R.id.map).getView().setVisibility(View.INVISIBLE);
 
         findViewById(R.id.findRoute).setVisibility(View.INVISIBLE);
@@ -81,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements OnDateSetListener
         endDateText.setVisibility(View.VISIBLE);
 
         findViewById(R.id.myRectangleView).setVisibility(View.VISIBLE);
+        findViewById(R.id.editTextSeparator).setVisibility(View.VISIBLE);
         getSupportFragmentManager().findFragmentById(R.id.map).getView().setVisibility(View.VISIBLE);
 
         findViewById(R.id.findRoute).setVisibility(View.VISIBLE);

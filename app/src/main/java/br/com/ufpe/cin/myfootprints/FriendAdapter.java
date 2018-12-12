@@ -31,6 +31,9 @@ public class FriendAdapter extends ArrayAdapter<String> {
         TextView textView = (TextView) rowView.findViewById(R.id.txtitem);
         textView.setText(location.getFriendContactNumber());
 
+        TextView textView2 = (TextView) rowView.findViewById(R.id.txtitem2);
+        textView2.setText(location.getDate());
+
         return rowView;
     }
 
