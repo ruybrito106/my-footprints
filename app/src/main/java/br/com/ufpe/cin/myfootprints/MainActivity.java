@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -52,12 +53,12 @@ public class MainActivity extends AppCompatActivity implements OnDateSetListener
     private static final String[] LOCATION_PERMISSIONS = { ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION };
     private static final String[] SMS_PERMISSIONS = { READ_CONTACTS, SEND_SMS, RECEIVE_SMS };
 
-    private String phoneNumber;
     private EditText startDateText;
     private EditText endDateText;
     private Date startDate;
     private Date endDate;
     private DateFormat dateFormat;
+    private DateFormat labelDateFormat;
     private GoogleMap mMap;
 
     private boolean canSendSMS;
@@ -204,13 +205,15 @@ public class MainActivity extends AppCompatActivity implements OnDateSetListener
 
     @Override
     public void onDateSet(String type, int year, int month, int day) {
-        Date date  = new Date(year, month, day);
+        Calendar dateSet = Calendar.getInstance();
+        dateSet.set(year, month, day, 0, 0, 0);
+        Date date = dateSet.getTime();
         DateHelper helper = new DateHelper();
         if(type.equals("START")){
-            startDateText.setText(dateFormat.format(date));
+            startDateText.setText(dateFormat.format(date).substring(0,5));
             startDate = helper.atStartOfDay(date);
         } else {
-            endDateText.setText(dateFormat.format(date));
+            endDateText.setText(dateFormat.format(date).substring(0,5));
             endDate = helper.atEndOfDay(date);
         }
     }
@@ -220,9 +223,9 @@ public class MainActivity extends AppCompatActivity implements OnDateSetListener
         startDateText = (EditText) findViewById(R.id.startDate);
         endDateText = (EditText) findViewById(R.id.endDate);
 
-        startDateText.setText(dateFormat.format(Calendar.getInstance().getTime()));
+        startDateText.setText(dateFormat.format(Calendar.getInstance().getTime()).substring(0,5));
         startDateText.setInputType(InputType.TYPE_NULL);
-        endDateText.setText(dateFormat.format(Calendar.getInstance().getTime()));
+        endDateText.setText(dateFormat.format(Calendar.getInstance().getTime()).substring(0,5));
         endDateText.setInputType(InputType.TYPE_NULL);
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
@@ -278,8 +281,8 @@ public class MainActivity extends AppCompatActivity implements OnDateSetListener
 
         dbInstance = LocationUpdateDAO.getInstance(this);
 
+        labelDateFormat = DateFormat.getInstance();
         dateFormat = android.text.format.DateFormat.getDateFormat(getApplicationContext());
-        phoneNumber = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
 
         Date current = new Date();
         DateHelper helper = new DateHelper();
@@ -287,7 +290,6 @@ public class MainActivity extends AppCompatActivity implements OnDateSetListener
         startDate = helper.atStartOfDay(current);
         endDate = helper.atEndOfDay(current);
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -320,7 +322,7 @@ public class MainActivity extends AppCompatActivity implements OnDateSetListener
         List<LocationUpdate> path = getLocationUpdatesByTimeRange(startDate, endDate);
         for(LocationUpdate location : path){
             LatLng latlng = new LatLng(location.getLat(), location.getLng());
-            String label = dateFormat.format(new Date((long)location.getTimestampSeconds()*1000));
+            String label = labelDateFormat.format(new Date((long)location.getTimestampSeconds()*1000));
             mMap.addMarker(new MarkerOptions().position(latlng).title(label));
             if(firstTime) mMap.moveCamera(CameraUpdateFactory.newLatLng(latlng));
         }

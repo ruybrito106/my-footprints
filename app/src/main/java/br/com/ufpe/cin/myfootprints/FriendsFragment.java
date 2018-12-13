@@ -36,9 +36,10 @@ public class FriendsFragment extends ListFragment {
 
         ArrayList<String>  adapterData = new ArrayList<String>();
         for(String friend: friends){
-            if(parser.locationUpdatesFromSMSText(friend).getPath().size() > 0){
+            boolean hasLocationData = parser.locationUpdatesFromSMSText(friend).getPath().size() > 0;
+            boolean isDifferentFromPrevious = adapterData.isEmpty() || !friend.equals(adapterData.get(adapterData.size()-1));
+            if (hasLocationData && isDifferentFromPrevious)
                 adapterData.add(friend);
-            }
         }
 
         arrayAdapterData = new String[adapterData.size()];

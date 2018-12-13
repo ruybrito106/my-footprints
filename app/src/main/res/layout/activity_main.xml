@@ -17,7 +17,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:menu="@menu/navigation" >
+        app:menu="@menu/navigation">
 
     </android.support.design.widget.BottomNavigationView>
 
@@ -26,7 +26,6 @@
         style="@style/FirebaseUI.Button"
         android:layout_width="85dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="100dp"
         android:layout_marginTop="8dp"
@@ -36,14 +35,18 @@
         app:layout_constraintHorizontal_bias="0.471"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.912" />
+        app:layout_constraintVertical_bias="0.968" />
 
     <FrameLayout
         android:id="@+id/friendsFragment"
-        android:layout_width="match_parent"
+        android:layout_width="384dp"
         android:layout_height="711dp"
-        app:layout_constraintBottom_toTopOf="@+id/navigation"
-        tools:layout_editor_absoluteX="0dp"></FrameLayout>
+        android:layout_margin="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"></FrameLayout>
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:map="http://schemas.android.com/apk/res-auto"
@@ -51,18 +54,19 @@
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="567dp"
-        android:layout_marginTop="8dp"
+        android:layout_height="0dp"
         map:layout_constraintBottom_toTopOf="@+id/navigation"
+        map:layout_constraintEnd_toEndOf="parent"
+        map:layout_constraintHorizontal_bias="0.0"
+        map:layout_constraintStart_toStartOf="parent"
         map:layout_constraintTop_toTopOf="parent"
-        map:layout_constraintVertical_bias="0.741"
-        tools:context=".MainActivity"
-        tools:layout_editor_absoluteX="0dp" />
+        map:layout_constraintVertical_bias="0.891"
+        tools:context=".MainActivity" />
 
     <View
         android:id="@+id/myRectangleView"
-        android:layout_width="260dp"
-        android:layout_height="44dp"
+        android:layout_width="188dp"
+        android:layout_height="48dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -72,45 +76,49 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.120000005" />
+        app:layout_constraintVertical_bias="0.02" />
 
     <EditText
         android:id="@+id/startDate"
-        android:layout_width="100dp"
+        android:layout_width="70dp"
         android:layout_height="32dp"
         android:layout_marginEnd="90dp"
         android:background="@null"
         android:ems="10"
+        android:fontFamily="sans-serif-smallcaps"
         android:onClick="showStartDatePickerDialog"
         android:textAlignment="center"
         android:textIsSelectable="true"
+        android:textSize="25sp"
         app:layout_constraintBottom_toBottomOf="@+id/myRectangleView"
         app:layout_constraintEnd_toEndOf="@+id/myRectangleView"
-        app:layout_constraintHorizontal_bias="0.281"
+        app:layout_constraintHorizontal_bias="0.35"
         app:layout_constraintStart_toStartOf="@+id/myRectangleView"
         app:layout_constraintTop_toTopOf="@+id/myRectangleView"
-        app:layout_constraintVertical_bias="0.086" />
+        app:layout_constraintVertical_bias="0.464" />
 
     <EditText
         android:id="@+id/endDate"
-        android:layout_width="100dp"
+        android:layout_width="70dp"
         android:layout_height="32dp"
         android:layout_marginStart="90dp"
         android:background="@null"
         android:ems="10"
+        android:fontFamily="sans-serif-smallcaps"
         android:onClick="showEndDatePickerDialog"
         android:textAlignment="center"
         android:textIsSelectable="true"
+        android:textSize="25sp"
         app:layout_constraintBottom_toBottomOf="@+id/myRectangleView"
         app:layout_constraintEnd_toEndOf="@+id/myRectangleView"
-        app:layout_constraintHorizontal_bias="0.714"
+        app:layout_constraintHorizontal_bias="0.66"
         app:layout_constraintStart_toStartOf="@+id/myRectangleView"
         app:layout_constraintTop_toTopOf="@+id/myRectangleView"
-        app:layout_constraintVertical_bias="0.086" />
+        app:layout_constraintVertical_bias="0.464" />
 
     <EditText
         android:id="@+id/editTextSeparator"
-        android:layout_width="5dp"
+        android:layout_width="15dp"
         android:layout_height="32dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
@@ -119,22 +127,25 @@
         android:background="@null"
         android:contextClickable="false"
         android:cursorVisible="false"
+        android:elevation="10sp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="-"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.116" />
+        android:text="TO"
+        android:textColor="#ff4081"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/myRectangleView"
+        app:layout_constraintEnd_toEndOf="@+id/myRectangleView"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="@+id/myRectangleView"
+        app:layout_constraintTop_toTopOf="@+id/myRectangleView"
+        app:layout_constraintVertical_bias="0.416" />
 
     <Button
         android:id="@+id/shareLocation"
         style="@style/FirebaseUI.Button"
         android:layout_width="85dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:layout_marginEnd="100dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
@@ -144,6 +155,6 @@
         app:layout_constraintHorizontal_bias="0.507"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.914" />
+        app:layout_constraintVertical_bias="0.968" />
 
 </android.support.constraint.ConstraintLayout>

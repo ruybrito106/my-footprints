@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -53,6 +54,14 @@ public class MapFragment extends DialogFragment implements OnMapReadyCallback {
             SupportMapFragment mapFragment = (SupportMapFragment) getFragmentManager()
                     .findFragmentById(R.id.map2);
             mapFragment.getMapAsync(this);
+
+            Button closeMapView = view.findViewById(R.id.dispatchMapButton);
+            closeMapView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onDestroyView();
+                }
+            });
 
             getDialog().getWindow().setSoftInputMode(
                     WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
