@@ -45,7 +45,7 @@ Observações:
 
 ### Melhorias ###
 
-Sobre o reprocessamento desnecessário, optamos por implementar uma cache em memória (penalizamos memória por economia de CPU).
+Sobre o reprocessamento desnecessário, optamos por implementar uma "cache" em memória (penalizamos memória por economia de CPU).
 
 ``` kotlin
 private var locationUpdateCachedCount: Int = 0
@@ -59,3 +59,5 @@ pathButton.setOnClickListener {
   }
 }
 ```
+
+Não foi necessário considerar período na "cache" dado que isso já está embutido na lógica da contagem. Voltamos a analisar o AndroidProfiler e não encontramos diferenças significativas.
