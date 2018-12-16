@@ -56,3 +56,14 @@ Nenhum dos dois integrantes têm experiência com Android, por isso pretendemos 
 ## Demo ##
 
 Assista no YouTube: https://youtu.be/Nt0TxbH8SEE
+
+## Analises ##
+
+Analise |  Link 
+:---------------:|:--------------:
+Memória | [Memória](https://github.com/ruybrito106/my-footprints/blob/master/memoria.md)
+Testes | [Testes](https://github.com/ruybrito106/my-footprints/blob/master/testes.md)
+CPU | [CPU](https://github.com/ruybrito106/my-footprints/blob/master/cpu.md)
+Rede | [Rede](https://github.com/ruybrito106/my-footprints/blob/master/bandwidth.md)
+Bateria | [Bateria](https://github.com/ruybrito106/my-footprints/blob/master/bateria.md)
+Arquitetura | [Arquitetura](https://github.com/ruybrito106/my-footprints/blob/master/archcomponents.md)
