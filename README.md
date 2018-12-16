@@ -1,5 +1,10 @@
 # Descrição do projeto #
 
+Splash Screen |  Main Screen | Friends Screen
+:----------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------:
+![Splash Screen](https://res.cloudinary.com/ufpe/image/upload/v1544986437/mf_splash.jpg)  |  ![Main Screen](https://res.cloudinary.com/ufpe/image/upload/v1544986409/mf_main.jpg) | ![Friends Screen](https://res.cloudinary.com/ufpe/image/upload/v1544986412/mf_friends.jpg) 
+
+
 ## Ideia ##
 Temos um app com analytics de localização para usuários que precisem compartilhar seu histórico de localização de forma prática ou simplesmente queiram entender de como são seus comportamentos de localização no dia-a-dia.
 
@@ -47,3 +52,7 @@ A princípio, conseguimos detectar que vamos precisar das seguintes permissões:
 
 ## Divisão de atividades ##
 Nenhum dos dois integrantes têm experiência com Android, por isso pretendemos dividir de forma mais ou menos igualitária. Higor possui um pouco mais de experiência com frontend e Ruy backend, por isso vamos tentar a princípio dividir dessa forma (visto que o trabalho de frontend neste projeto especificamente não parece ser tão simples pela necessidade de interagir com mapas). Ambos trabalhamos na InLoco, então a inspiração de um aplicativo com uso de localização não é totalmente aleatória.
+
+## Demo ##
+
+Assista no YouTube: https://youtu.be/Nt0TxbH8SEE
