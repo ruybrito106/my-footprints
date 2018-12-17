@@ -12,3 +12,7 @@ Observações:
 - Tempo considerado: aproximadamente 2 dias (desde último carregamento completo).
 - Tivemos apenas 2% de uso de bateria.
 - O consumo de bateria em background é apontado como superior ao consumo em foreground.
+
+### Melhorias ###
+
+Não conseguimos obter nenhum insight para melhorias no consumo de bateria baseado nessa análise acima. Como o consumo em background foi maior que em foreground, talvez uma ideia seria testar uma solução com _JobScheduler_ (pedindo dados de localização apenas em situações convenientes) ao invés do _LocationListener_ e fazer uma análise comparativa, no entanto não conseguimos fazer a tempo.
