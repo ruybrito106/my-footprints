@@ -19,4 +19,4 @@ Observações:
 
 ### Melhorias ###
 
-Não tivemos condições de aplicar nenhuma melhoria, dado a limitações de dependências.
+Não tivemos condições de aplicar nenhuma melhoria, dado a limitações de dependências. Ainda, considerando o consumo irrisório apontado acima, talvez nem haja necessidade de se preocupar com melhorias e apenas confiar no contrato com as bibliotecas externas.
