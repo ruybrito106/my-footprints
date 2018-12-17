@@ -34,7 +34,7 @@ class LocationUpdate(var lat: Double, var lng: Double, var timestampSeconds: Int
             return LocationUpdate(pt.latitude, pt.longitude, 0)
         }
 
-        private fun distance(lat1: Double, lat2: Double, lon1: Double, lon2: Double): Double {
+        fun distance(lat1: Double, lat2: Double, lon1: Double, lon2: Double): Double {
             var lat1 = lat1
             var lat2 = lat2
 
