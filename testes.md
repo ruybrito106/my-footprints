@@ -1,6 +1,6 @@
 # Testes #
 
-Como boas práticas no projeto, optamos por adicionar testes unitários em classes chaves e usar a ferramenta *UIAutomator* (_higor substitua pelo correto_) para testes de interface.
+Como boas práticas no projeto, optamos por adicionar testes unitários em classes chaves e usar a ferramenta *Espresso* para testes de interface.
 
 ### Unitários ###
 
@@ -13,4 +13,4 @@ Por isso, as únicas classes para as quais elaboramos testes foram:
 
 ### Interface ###
 
-(_higor faz teu nome_)
+Para os testes de UI, utilizamos a biblioteca Espresso para simular o fluxo de interface do app. Incluímos testes para certificar de que o app estava abrindo corretamente, passando da splash screen e tela de login, e chegando até a home. Também testamos se o fluxo de menus da tela principal estava funcionando, simulando clicks em cada botão de navegação e verificando se houve uma troca de contexto como esperado.
