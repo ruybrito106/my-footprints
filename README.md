@@ -28,12 +28,12 @@ A primeira tela exibida (após splash) será uma tela de "registro", onde o usu�
 
 A MainActivity vai possuir dois fragments responsáveis cada um por uma funcionalidade principal:
 
-* Na funcionalidade do comportamento do usuário, teríamos filtros (seletores) interagindo com o mapa (Maps SDK) e um botão para compartilhar a localização. 
+- Na funcionalidade do comportamento do usuário, teríamos filtros (seletores) interagindo com o mapa (Maps SDK) e um botão para compartilhar a localização. 
 
-  1. As informações de localização vão ser coletadas por um LocationListener que vai persistir o dado num SQLite. 
-  2. A detecção de uma visita vai ser uma lógica bem primitiva (muito atrás da InLoco), na qual apenas veremos o quanto o usuário se moveu num curto espaço de tempo.
+  - As informações de localização vão ser coletadas por um LocationListener que vai persistir o dado num SQLite. 
+  - A detecção de uma visita vai ser uma lógica bem primitiva (muito atrás da InLoco), na qual apenas veremos o quanto o usuário se moveu num curto espaço de tempo.
 
-* Na funcionalidade do comportamento compartilhado com o usuário, teríamos uma RecyclerView alimentado por um Adapter com dados que seriam persistidos num SQLite. Quando o usuário clicar no item, exibiremos num modal a trajetória percorrida pelo usuário que compartilhou.
+- Na funcionalidade do comportamento compartilhado com o usuário, teríamos uma RecyclerView alimentado por um Adapter com dados que seriam persistidos num SQLite. Quando o usuário clicar no item, exibiremos num modal a trajetória percorrida pelo usuário que compartilhou.
 
 O processo de compartilhar a localização seria uma Service dedicado, para evitar que a interação seja travada enquanto o SMS é enviado. O Service indicaria o término da operação por broadcast.
 
